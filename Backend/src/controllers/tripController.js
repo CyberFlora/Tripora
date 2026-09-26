@@ -2,29 +2,34 @@ const {
     buildTripData
 } = require("../services/tripPlanningService");
 
-const {
-    geocodeTripLocations
-} = require("../services/geocodingService");
-
-const {
-    getRoute
-} = require("../services/routingService");
 
 const planTrip = async (req, res, next) => {
+
     try {
+
         const {
             destinationCity,
             startingAddress,
+
             startDate,
             endDate,
-            budget,
+
             numberOfPeople,
+            budget,
+
             interests,
+
             tripType,
+            travelStyle,
+            accommodation,
+            transportMode,
+
             additionalDetails
         } = req.body;
 
-        // Required field validation
+
+        // Required fields
+
         if (!destinationCity) {
             return res.status(400).json({
                 success: false,
@@ -39,17 +44,17 @@ const planTrip = async (req, res, next) => {
             });
         }
 
-        if (!startDate) {
+        if (!startDate || !endDate) {
             return res.status(400).json({
                 success: false,
-                message: "Start date is required."
+                message: "Start date and end date are required."
             });
         }
 
-        if (!endDate) {
+        if (!numberOfPeople || numberOfPeople < 1) {
             return res.status(400).json({
                 success: false,
-                message: "End date is required."
+                message: "Number of people must be at least 1."
             });
         }
 
@@ -57,13 +62,6 @@ const planTrip = async (req, res, next) => {
             return res.status(400).json({
                 success: false,
                 message: "Budget is required."
-            });
-        }
-
-        if (!numberOfPeople) {
-            return res.status(400).json({
-                success: false,
-                message: "Number of people is required."
             });
         }
 
@@ -81,43 +79,82 @@ const planTrip = async (req, res, next) => {
             });
         }
 
-        // 1. Convert addresses/city into coordinates
-        const locations = await geocodeTripLocations(
+
+        const tripData = await buildTripData({
+
             startingAddress,
-            destinationCity
-        );
+            destinationCity,
 
-        // 2. Find road route between the two locations
-        const route = await getRoute(
-            locations.startingLocation,
-            locations.destinationLocation
-        );
+            startDate,
+            endDate,
 
-        // 3. Temporary response
+            numberOfPeople,
+            budget,
+
+            interests,
+
+            tripType: tripType || "friends",
+
+            travelStyle:
+                travelStyle || "balanced",
+
+            accommodation:
+                accommodation || "flexible",
+
+            transportMode:
+                transportMode || "mixed",
+
+            additionalDetails:
+                additionalDetails || ""
+        });
+
+
         res.status(200).json({
+
             success: true,
-            message: "Trip route calculated successfully.",
+
+            message: "Trip data calculated successfully.",
 
             tripInput: {
                 destinationCity,
                 startingAddress,
+
                 startDate,
                 endDate,
-                budget,
+
                 numberOfPeople,
+                budget,
+
                 interests,
-                tripType: tripType || "general",
-                additionalDetails: additionalDetails || ""
+
+                tripType:
+                    tripType || "friends",
+
+                travelStyle:
+                    travelStyle || "balanced",
+
+                accommodation:
+                    accommodation || "flexible",
+
+                transportMode:
+                    transportMode || "mixed",
+
+                additionalDetails:
+                    additionalDetails || ""
             },
 
-            locations,
-
-            route
+            ...tripData
         });
 
+
     } catch (error) {
+
         next(error);
+
     }
 };
 
-module.exports = { planTrip };
+
+module.exports = {
+    planTrip
+};

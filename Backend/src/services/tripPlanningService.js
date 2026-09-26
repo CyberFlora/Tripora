@@ -11,36 +11,93 @@ const {
 } = require("./weatherService");
 
 
+const calculateNumberOfDays = (startDate, endDate) => {
+    const start = new Date(`${startDate}T00:00:00`);
+    const end = new Date(`${endDate}T00:00:00`);
+
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+        throw new Error("Invalid trip dates.");
+    }
+
+    if (end < start) {
+        throw new Error("End date cannot be before start date.");
+    }
+
+    const difference =
+        Math.round(
+            (end.getTime() - start.getTime()) /
+            (1000 * 60 * 60 * 24)
+        );
+
+    return difference + 1;
+};
+
+
 const buildTripData = async ({
     startingAddress,
     destinationCity,
     startDate,
-    endDate
+    endDate,
+
+    numberOfPeople,
+    budget,
+    interests,
+
+    tripType,
+    travelStyle,
+    accommodation,
+    transportMode,
+
+    additionalDetails
 }) => {
 
-    // 1. Get coordinates for starting point and destination
+    // 1. Geocode starting point and destination
     const locations = await geocodeTripLocations(
         startingAddress,
         destinationCity
     );
 
-    // 2. Get road distance, travel time and route geometry
+    // 2. Calculate road route
     const route = await getRoute(
         locations.startingLocation,
         locations.destinationLocation
     );
 
-    // 3. Get weather for the destination
+    // 3. Get destination weather
     const weather = await getWeather(
         locations.destinationLocation,
         startDate,
         endDate
     );
 
+    // 4. Calculate trip duration
+    const numberOfDays = calculateNumberOfDays(
+        startDate,
+        endDate
+    );
+
     return {
+        numberOfDays,
+
         locations,
+
         route,
-        weather
+
+        weather,
+
+        preferences: {
+            numberOfPeople,
+            budget,
+            interests,
+            tripType,
+            travelStyle,
+            accommodation,
+            transportMode,
+            additionalDetails
+        },
+
+        itinerary: null,
+        aiStatus: "pending"
     };
 };
 

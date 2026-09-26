@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", "Times New Roman", serif;
+
+  --color-ink: #060a12;
+  --color-ink-soft: #0b1220;
+  --color-ink-mid: #121a2b;
+  --color-cream: #f3ead8;
+  --color-cream-soft: #d8cbb4;
+  --color-amber: #f4a83a;
+  --color-orange: #e8782f;
+  --color-peach: #f0b07a;
+  --color-gold: #d4a24a;
+  --color-muted: #8b95a8;
+  --color-line: rgba(243, 234, 216, 0.1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--color-ink);
+    color: var(--color-cream-soft);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-amber) 40%, transparent);
+    color: var(--color-cream);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-amber);
+    outline-offset: 3px;
+  }
+
+  button {
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  .grid-backdrop {
+    background-image:
+      linear-gradient(rgba(120, 150, 190, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(120, 150, 190, 0.07) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 80%);
+  }
+
+  .text-gradient-warm {
+    background: linear-gradient(105deg, #f6d08a 0%, #f4a83a 38%, #e8782f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glow-orb {
+    background: radial-gradient(
+      circle at 42% 40%,
+      #ffd27a 0%,
+      #f4a83a 22%,
+      #e26a28 48%,
+      #c24a1a 68%,
+      transparent 78%
+    );
+    filter: blur(8px);
+  }
+
+  .soft-panel {
+    background: linear-gradient(
+      180deg,
+      rgba(18, 26, 43, 0.72) 0%,
+      rgba(11, 18, 32, 0.5) 100%
+    );
+    border: 1px solid var(--color-line);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes orb-breathe {
+  0%,
+  100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.045) translate(8px, -6px);
+    opacity: 1;
+  }
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-orb {
+  animation: orb-breathe 12s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float-soft 8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-fade-up,
+  .animate-orb,
+  .animate-float {
+    animation: none;
+  }
+}

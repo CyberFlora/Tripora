@@ -1,0 +1,421 @@
+/* =========================================================
+   TRIPORA — APP STYLES
+   Premium Dark Travel Experience
+   ========================================================= */
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* =========================================================
+   APP SHELL
+   ========================================================= */
+
+.app-shell {
+  min-height: 100vh;
+  width: 100%;
+  background:
+    radial-gradient(
+      circle at 80% 10%,
+      rgba(226, 139, 66, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 10% 40%,
+      rgba(255, 186, 100, 0.04),
+      transparent 28%
+    ),
+    #060a12;
+  color: #f5eee3;
+}
+
+/* =========================================================
+   CINEMATIC GRID BACKGROUND
+   ========================================================= */
+
+.tripora-grid {
+  position: relative;
+  isolation: isolate;
+}
+
+.tripora-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.025) 1px,
+      transparent 1px
+    );
+
+  background-size: 48px 48px;
+
+  mask-image: linear-gradient(
+    to bottom,
+    black,
+    transparent 85%
+  );
+}
+
+/* =========================================================
+   CONTAINER
+   ========================================================= */
+
+.tripora-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .tripora-container {
+    width: min(100% - 32px, 1180px);
+  }
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.tripora-section {
+  position: relative;
+  padding: 110px 0;
+}
+
+@media (max-width: 768px) {
+  .tripora-section {
+    padding: 72px 0;
+  }
+}
+
+/* =========================================================
+   EYEBROW
+   ========================================================= */
+
+.tripora-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 18px;
+
+  color: #e6a15b;
+
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.tripora-eyebrow::before {
+  content: '';
+  width: 28px;
+  height: 1px;
+  background: #e6a15b;
+}
+
+/* =========================================================
+   DISPLAY HEADINGS
+   ========================================================= */
+
+.tripora-heading {
+  margin: 0;
+
+  color: #f5eee3;
+
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.tripora-heading-xl {
+  font-size: clamp(48px, 7vw, 92px);
+}
+
+.tripora-heading-lg {
+  font-size: clamp(40px, 5vw, 68px);
+}
+
+.tripora-heading-md {
+  font-size: clamp(32px, 4vw, 52px);
+}
+
+/* =========================================================
+   BODY TEXT
+   ========================================================= */
+
+.tripora-text {
+  color: rgba(245, 238, 227, 0.68);
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.tripora-text-large {
+  max-width: 680px;
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+@media (max-width: 768px) {
+  .tripora-text-large {
+    font-size: 16px;
+  }
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.tripora-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 48px;
+  padding: 0 22px;
+
+  border: 1px solid transparent;
+  border-radius: 4px;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  text-decoration: none;
+
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.tripora-button:hover {
+  transform: translateY(-2px);
+}
+
+.tripora-button:focus-visible {
+  outline: 2px solid #e6a15b;
+  outline-offset: 4px;
+}
+
+.tripora-button-primary {
+  background: linear-gradient(
+    135deg,
+    #e8a45f,
+    #c97838
+  );
+
+  color: #120d09;
+
+  box-shadow:
+    0 10px 30px rgba(214, 132, 61, 0.18);
+}
+
+.tripora-button-primary:hover {
+  box-shadow:
+    0 14px 38px rgba(214, 132, 61, 0.28);
+}
+
+.tripora-button-secondary {
+  border-color: rgba(245, 238, 227, 0.2);
+  background: rgba(255, 255, 255, 0.025);
+  color: #f5eee3;
+}
+
+.tripora-button-secondary:hover {
+  border-color: rgba(230, 161, 91, 0.55);
+  background: rgba(230, 161, 91, 0.06);
+}
+
+/* =========================================================
+   SUBTLE GLOW
+   ========================================================= */
+
+.tripora-glow {
+  position: relative;
+}
+
+.tripora-glow::before {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+
+  top: -180px;
+  right: -120px;
+
+  background: rgba(218, 134, 62, 0.08);
+
+  filter: blur(100px);
+  border-radius: 50%;
+
+  pointer-events: none;
+}
+
+/* =========================================================
+   PREMIUM SURFACE
+   ========================================================= */
+
+.tripora-surface {
+  border: 1px solid rgba(245, 238, 227, 0.09);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.045),
+      rgba(255, 255, 255, 0.015)
+    );
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.22);
+}
+
+/* =========================================================
+   DIVIDER
+   ========================================================= */
+
+.tripora-divider {
+  width: 100%;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(245, 238, 227, 0.12),
+    transparent
+  );
+}
+
+/* =========================================================
+   FORM ELEMENTS
+   ========================================================= */
+
+.tripora-input {
+  width: 100%;
+  min-height: 50px;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(245, 238, 227, 0.14);
+  border-radius: 4px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.035);
+  color: #f5eee3;
+
+  font: inherit;
+
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.tripora-input::placeholder {
+  color: rgba(245, 238, 227, 0.38);
+}
+
+.tripora-input:hover {
+  border-color: rgba(245, 238, 227, 0.24);
+}
+
+.tripora-input:focus {
+  border-color: #d88b4a;
+  background: rgba(255, 255, 255, 0.05);
+
+  box-shadow:
+    0 0 0 3px rgba(216, 139, 74, 0.1);
+}
+
+/* =========================================================
+   SELECTION
+   ========================================================= */
+
+.tripora-selectable {
+  border: 1px solid rgba(245, 238, 227, 0.12);
+  background: rgba(255, 255, 255, 0.025);
+
+  cursor: pointer;
+
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.tripora-selectable:hover {
+  border-color: rgba(230, 161, 91, 0.45);
+  background: rgba(230, 161, 91, 0.045);
+  transform: translateY(-2px);
+}
+
+.tripora-selectable.selected {
+  border-color: #e3a05b;
+  background: rgba(227, 160, 91, 0.1);
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+.tripora-fade-up {
+  animation: triporaFadeUp 600ms ease both;
+}
+
+@keyframes triporaFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .tripora-button {
+    width: 100%;
+  }
+
+  .tripora-heading-xl {
+    font-size: clamp(44px, 14vw, 64px);
+  }
+
+  .tripora-section {
+    padding: 64px 0;
+  }
+}
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

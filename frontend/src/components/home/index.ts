@@ -1,0 +1,8 @@
+export { CompleteJourney } from './CompleteJourney'
+export { FinalCta } from './FinalCta'
+export { Hero } from './Hero'
+export { HowItWorks } from './HowItWorks'
+export { PersonalizedTravel } from './PersonalizedTravel'
+export { SmartFeatures } from './SmartFeatures'
+export { WhatIfMode } from './WhatIfMode'
+export { WhyTripora } from './WhyTripora'

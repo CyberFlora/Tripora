@@ -192,10 +192,19 @@ export function PlanPage() {
 
     // Keep the complete backend result available
     // for the results/workspace page.
-    sessionStorage.setItem(
-      'tripora_trip_result',
-      JSON.stringify(result),
-    )
+    const savedTripId = result.savedTrip?.id
+
+sessionStorage.setItem(
+  'tripora_trip_result',
+  JSON.stringify(result),
+)
+
+if (savedTripId) {
+  sessionStorage.setItem(
+    `tripora_trip_result_${savedTripId}`,
+    JSON.stringify(result),
+  )
+}
 
     setSubmitted(true)
 

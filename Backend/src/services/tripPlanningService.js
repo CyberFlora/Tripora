@@ -33,6 +33,197 @@ const calculateNumberOfDays = (startDate, endDate) => {
 };
 
 
+const formatDate = (startDate, dayOffset) => {
+    const date = new Date(`${startDate}T00:00:00`);
+    date.setDate(date.getDate() + dayOffset);
+
+    return date.toISOString().split("T")[0];
+};
+
+
+const buildItinerary = ({
+    startDate,
+    destinationCity,
+    numberOfDays,
+    interests,
+    travelStyle,
+    accommodation,
+    transportMode
+}) => {
+    const interestList = Array.isArray(interests)
+        ? interests
+        : [];
+
+    const primaryInterest =
+        interestList[0] || "local attractions";
+
+    const secondaryInterest =
+        interestList[1] || "local food";
+
+    const isGoa =
+        destinationCity.toLowerCase().includes("goa");
+
+    const itinerary = [];
+
+    for (let index = 0; index < numberOfDays; index += 1) {
+        const dayNumber = index + 1;
+
+        let title = `Explore ${destinationCity}`;
+
+        let activities = [
+            {
+                id: `day-${dayNumber}-1`,
+                time: "09:00",
+                title: `Morning ${primaryInterest} experience`,
+                description:
+                    `Start the day exploring popular ${primaryInterest.toLowerCase()} experiences in ${destinationCity}.`,
+                location: destinationCity,
+                category: primaryInterest,
+                estimatedCost: 500
+            },
+            {
+                id: `day-${dayNumber}-2`,
+                time: "13:00",
+                title: `Lunch & ${secondaryInterest}`,
+                description:
+                    `Enjoy a local lunch followed by a ${secondaryInterest.toLowerCase()} experience.`,
+                location: destinationCity,
+                category: secondaryInterest,
+                estimatedCost: 800
+            },
+            {
+                id: `day-${dayNumber}-3`,
+                time: "17:00",
+                title: "Evening leisure",
+                description:
+                    `Keep the evening flexible for shopping, cafés, photography or relaxed exploration.`,
+                location: destinationCity,
+                category: "Leisure",
+                estimatedCost: 500
+            }
+        ];
+
+        if (isGoa) {
+            if (dayNumber === 1) {
+                title = "Panjim & Old Goa";
+
+                activities = [
+                    {
+                        id: `day-${dayNumber}-1`,
+                        time: "09:00",
+                        title: "Explore Panjim",
+                        description:
+                            "Start with a relaxed city walk through Panjim and nearby heritage streets.",
+                        location: "Panjim",
+                        category: "Culture",
+                        estimatedCost: 300
+                    },
+                    {
+                        id: `day-${dayNumber}-2`,
+                        time: "13:00",
+                        title: "Goan lunch experience",
+                        description:
+                            "Enjoy a local Goan lunch and explore nearby cafés.",
+                        location: "Panjim",
+                        category: "Food",
+                        estimatedCost: 800
+                    },
+                    {
+                        id: `day-${dayNumber}-3`,
+                        time: "17:00",
+                        title: "Fontainhas & sunset",
+                        description:
+                            "Walk through Fontainhas and finish the day with a relaxed sunset outing.",
+                        location: "Fontainhas",
+                        category: "Culture",
+                        estimatedCost: 300
+                    }
+                ];
+            } else if (dayNumber === 2) {
+                title = "North Goa Beaches & Adventure";
+
+                activities = [
+                    {
+                        id: `day-${dayNumber}-1`,
+                        time: "09:00",
+                        title: "North Goa beach morning",
+                        description:
+                            "Spend the morning exploring a North Goa beach and nearby coastal spots.",
+                        location: "North Goa",
+                        category: "Beaches",
+                        estimatedCost: 300
+                    },
+                    {
+                        id: `day-${dayNumber}-2`,
+                        time: "14:00",
+                        title: "Adventure activity",
+                        description:
+                            "Plan a water or outdoor adventure activity depending on availability and weather.",
+                        location: "North Goa",
+                        category: "Adventure",
+                        estimatedCost: 1500
+                    },
+                    {
+                        id: `day-${dayNumber}-3`,
+                        time: "18:00",
+                        title: "Beach sunset & dinner",
+                        description:
+                            "Relax by the coast and finish with a local dinner.",
+                        location: "North Goa",
+                        category: "Food",
+                        estimatedCost: 1000
+                    }
+                ];
+            } else if (dayNumber === 3) {
+                title = "South Goa & Relaxation";
+
+                activities = [
+                    {
+                        id: `day-${dayNumber}-1`,
+                        time: "09:00",
+                        title: "South Goa beaches",
+                        description:
+                            "Explore a quieter beach area and enjoy a slower morning.",
+                        location: "South Goa",
+                        category: "Beaches",
+                        estimatedCost: 300
+                    },
+                    {
+                        id: `day-${dayNumber}-2`,
+                        time: "13:00",
+                        title: "Lunch & local exploration",
+                        description:
+                            "Enjoy lunch and explore nearby local attractions.",
+                        location: "South Goa",
+                        category: "Food",
+                        estimatedCost: 900
+                    },
+                    {
+                        id: `day-${dayNumber}-3`,
+                        time: "17:30",
+                        title: "Relaxed evening",
+                        description:
+                            "Keep the final evening flexible for shopping, cafés or a sunset walk.",
+                        location: "South Goa",
+                        category: "Leisure",
+                        estimatedCost: 500
+                    }
+                ];
+            }
+        }
+
+        itinerary.push({
+            day: dayNumber,
+            date: formatDate(startDate, index),
+            title,
+            activities
+        });
+    }
+
+    return itinerary;
+};
+
+
 const buildTripData = async ({
     startingAddress,
     destinationCity,
@@ -76,6 +267,17 @@ const buildTripData = async ({
         endDate
     );
 
+    // 5. Build structured itinerary
+    const itinerary = buildItinerary({
+        startDate,
+        destinationCity,
+        numberOfDays,
+        interests,
+        travelStyle,
+        accommodation,
+        transportMode
+    });
+
     return {
         numberOfDays,
 
@@ -96,8 +298,9 @@ const buildTripData = async ({
             additionalDetails
         },
 
-        itinerary: null,
-        aiStatus: "pending"
+        itinerary,
+
+        aiStatus: "ready"
     };
 };
 

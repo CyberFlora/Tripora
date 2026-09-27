@@ -29,19 +29,39 @@ const getWeather = async (destinationLocation, startDate, endDate) => {
         ].join(",")
     );
 
+    // Open-Meteo provides forecasts up to 16 days ahead.
+    const today = new Date();
+    const maxForecastDate = new Date(today);
+    maxForecastDate.setDate(today.getDate() + 15);
+
+    const maxForecastDateString = maxForecastDate
+        .toISOString()
+        .split("T")[0];
+
+    const safeEndDate =
+        endDate > maxForecastDateString
+            ? maxForecastDateString
+            : endDate;
+
+    // If the trip starts beyond the live forecast window,
+    // return an empty weather array instead of failing the whole trip.
+    if (startDate > maxForecastDateString) {
+        return [];
+    }
+
     url.searchParams.set("start_date", startDate);
-    url.searchParams.set("end_date", endDate);
+    url.searchParams.set("end_date", safeEndDate);
     url.searchParams.set("timezone", "auto");
 
     const response = await fetch(url);
 
     if (!response.ok) {
-    const errorText = await response.text();
+        const errorText = await response.text();
 
-    throw new Error(
-        `Open-Meteo request failed: ${response.status} - ${errorText}`
-    );
-}
+        throw new Error(
+            `Open-Meteo request failed: ${response.status} - ${errorText}`
+        );
+    }
 
     const data = await response.json();
 

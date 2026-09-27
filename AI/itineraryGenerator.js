@@ -1,10 +1,10 @@
-const {
+import {
     createItineraryPrompt
-} = require("./itineraryPrompt");
+} from "./itineraryPrompt.js";
 
-const {
+import {
     generateGeminiJSON
-} = require("./geminiService");
+} from "./geminiService.js";
 
 
 const generateItinerary = async (trip) => {
@@ -17,6 +17,6 @@ const generateItinerary = async (trip) => {
 };
 
 
-module.exports = {
+export {
     generateItinerary
 };

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Trip } from '../types/trip'
+import { planTrip } from '../services/api'
 import { Button, Container, Eyebrow } from '../components/common'
 
 type TripForm = {
@@ -153,7 +153,9 @@ export function PlanPage() {
     return Object.keys(nextErrors).length === 0
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+ async function handleSubmit(
+  event: React.FormEvent<HTMLFormElement>,
+) {
   event.preventDefault()
 
   if (!validate()) {
@@ -161,50 +163,54 @@ export function PlanPage() {
     return
   }
 
-  const start = new Date(form.startDate)
-  const end = new Date(form.endDate)
-
-  const duration =
-    Math.ceil(
-      (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
-    ) + 1
-
-  const trip: Trip = {
-    id: crypto.randomUUID(),
-
-    title: `${form.destination} Escape`,
-
-    from: form.from,
-    to: form.destination,
+  const payload = {
+    destinationCity: form.destination,
+    startingAddress: form.from,
 
     startDate: form.startDate,
     endDate: form.endDate,
-    duration,
 
-    travelers: form.travelers,
-    budgetInr: form.budget,
+    numberOfPeople: form.travelers,
+    budget: form.budget,
+
     interests: form.interests,
 
     tripType: form.tripType,
     travelStyle: form.travelStyle,
     accommodation: form.accommodation,
-    transportation: form.transportation,
+    transportMode: form.transportation,
 
-    additionalPreferences: form.additionalPreferences,
-
-    status: 'draft',
-
-    dna: [],
-
-    itinerary: [],
-
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    additionalDetails: form.additionalPreferences,
   }
 
-  setSubmitted(true)
+  try {
+    console.log('Sending trip to backend:', payload)
 
-  console.log('Trip created:', trip)
+    const result = await planTrip(payload)
+
+    console.log('Backend response:', result)
+
+    // Keep the complete backend result available
+    // for the results/workspace page.
+    sessionStorage.setItem(
+      'tripora_trip_result',
+      JSON.stringify(result),
+    )
+
+    setSubmitted(true)
+
+  } catch (error) {
+    console.error('Trip planning failed:', error)
+
+    setSubmitted(false)
+
+    setErrors({
+      submit:
+        error instanceof Error
+          ? error.message
+          : 'Failed to plan trip.',
+    })
+  }
 }
 
   return (
@@ -649,6 +655,11 @@ export function PlanPage() {
           {/* Submit */}
           <div className="flex flex-col items-start gap-4 border-t border-white/8 pt-8 sm:flex-row sm:items-center sm:justify-between">
             <div>
+            {errors.submit && (
+  <p className="text-sm text-orange-300">
+    {errors.submit}
+  </p>
+)}
               {submitted ? (
                 <p className="text-sm text-gold">
                   ✓ Your trip preferences are ready.

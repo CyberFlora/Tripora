@@ -1,91 +1,41 @@
-const path = require("path");
-const dotenv = require("dotenv");
+import "dotenv/config";
+import { GoogleGenAI } from "@google/genai";
 
-dotenv.config({
-    path: path.join(__dirname, ".env")
+const apiKey = process.env.GEMINI_API_KEY;
+const model = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+
+if (!apiKey) {
+    throw new Error("GEMINI_API_KEY is missing from AI/.env");
+}
+
+const ai = new GoogleGenAI({
+    apiKey
 });
 
-let client = null;
-
-const getClient = async () => {
-    if (!client) {
-        const { GoogleGenAI } = await import("@google/genai");
-
-        if (!process.env.GEMINI_API_KEY) {
-            throw new Error("GEMINI_API_KEY is not set.");
-        }
-
-        client = new GoogleGenAI({
-            apiKey: process.env.GEMINI_API_KEY
-        });
-    }
-
-    return client;
-};
-
-const sleep = (ms) =>
-    new Promise(resolve => setTimeout(resolve, ms));
-
-const MODELS = [
-    "gemini-3.6-flash",
-    "gemini-3.5-flash-lite",
-    "gemini-3.7-flash",
-    "gemini-3.8-flash"
-];
 
 const generateGeminiJSON = async (prompt) => {
-    const ai = await getClient();
-
-    let lastError;
-
-    for (const model of MODELS) {
-        for (let attempt = 1; attempt <= 2; attempt++) {
-            try {
-                console.log(`Trying Gemini model: ${model} (attempt ${attempt})`);
-
-                const response = await ai.models.generateContent({
-                    model,
-                    contents: prompt,
-                    config: {
-                        responseMimeType: "application/json"
-                    }
-                });
-
-                if (!response.text) {
-                    throw new Error("Gemini returned an empty response.");
-                }
-
-                try {
-                    return JSON.parse(response.text);
-                } catch {
-                    throw new Error("Gemini returned invalid JSON.");
-                }
-
-            } catch (error) {
-                lastError = error;
-
-                const message = error?.message || "";
-
-                const isTemporary =
-                    message.includes("503") ||
-                    message.includes("UNAVAILABLE") ||
-                    message.includes("high demand") ||
-                    message.includes("overloaded");
-
-                if (!isTemporary) {
-                    throw error;
-                }
-
-                if (attempt === 1) {
-                    await sleep(1500);
-                }
+    try {
+        const response = await ai.models.generateContent({
+            model,
+            contents: prompt,
+            config: {
+                responseMimeType: "application/json"
             }
-        }
-    }
+        });
 
-    throw lastError || new Error("All Gemini models failed.");
+        if (!response.text) {
+            throw new Error("Gemini returned an empty response.");
+        }
+
+        return JSON.parse(response.text);
+
+    } catch (error) {
+        console.error("Gemini error:", error.message);
+        throw error;
+    }
 };
 
-module.exports = {
+
+export {
     generateGeminiJSON
 };

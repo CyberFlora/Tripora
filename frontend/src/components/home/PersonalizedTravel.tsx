@@ -2,7 +2,7 @@ import { sampleTripDna } from '../../data/home'
 import { Container, Section } from '../common'
 
 export function PersonalizedTravel() {
-  const { from, to, datesLabel, budgetLabel, travelers, interests, occasion, dna } =
+  const { from, to, datesLabel, budgetLabel, travelers, interests, tripType, dna } =
     sampleTripDna
 
   return (
@@ -25,7 +25,7 @@ export function PersonalizedTravel() {
               <Field label="Dates" value={datesLabel} />
               <Field label="Budget" value={budgetLabel} />
               <Field label="Travelers" value={String(travelers)} />
-              <Field label="Occasion" value={occasion} />
+              <Field label="Occasion" value={tripType} />
             </dl>
 
             <div className="mt-8">

@@ -98,14 +98,11 @@ export type WhatIfScenario = {
     durationLabel: string
     travelersLabel: string
   }
-
   question: string
-
   adapted: {
     budgetLabel: string
     durationLabel: string
     travelersLabel: string
   }
-
   outcomes: string[]
 }
